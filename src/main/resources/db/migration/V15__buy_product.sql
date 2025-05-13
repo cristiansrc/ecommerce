@@ -1,0 +1,11 @@
+CREATE TABLE buy_product
+(
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    "buyId" bigint NOT NULL,
+    CONSTRAINT buy_product_pkey PRIMARY KEY (id),
+    CONSTRAINT buy_product FOREIGN KEY ("buyId")
+    REFERENCES buy (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+);

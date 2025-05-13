@@ -1,0 +1,1 @@
+select 'Conexion success' as conectionDbState;
