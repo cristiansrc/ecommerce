@@ -17,7 +17,7 @@ public abstract class Rest  {
         responseInfo.setCode(httpStatus.value());
         responseInfo.setDetail(msg);
 
-        response.setResponseInfo(responseInfo);
+        response.setError(responseInfo);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -1,6 +1,8 @@
 package com.umb.laura.aviles.ecommerce.repository;
 
 import com.umb.laura.aviles.ecommerce.model.Admin;
+import com.umb.laura.aviles.ecommerce.model.AuthAdmin;
+
 import lombok.AllArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -37,33 +40,46 @@ public class AdminRepository {
         return keyHolder.getKey().intValue();
     }
 
-    public Admin loginAdmin(String mail, String password) {
+    public AuthAdmin loginAdmin(String mail, String password) {
         return DataAccessUtils.singleResult(
                 jdbcTemplate.query(
-                        "SELECT id, name, \"lastName\", mail, password, phone, address, \"cityId\"  " +
-                                "FROM\"user\" where mail = ? and password = ?",
-                        new BeanPropertyRowMapper<>(Admin.class),
+                        "select id, name, \"lastName\", mail " +
+                        " from admin where mail = ? and password = ? ",
+                        new BeanPropertyRowMapper<>(AuthAdmin.class),
                         mail,
                         password
                 )
         );
     }
 
+    public Optional<Admin> getAdminXMail(String mail) {
+        return Optional.of(
+            DataAccessUtils.singleResult(
+                jdbcTemplate.query(
+                        "select id, name, \"lastName\", mail " +
+                            " from admin where mail = ? ",
+                        new BeanPropertyRowMapper<>(Admin.class),
+                        mail
+                )
+            )
+        );
+    }
+
     public Admin getAdmin(Integer id) {
         return DataAccessUtils.singleResult(
                 jdbcTemplate.query(
-                    "SELECT id, name, \"lastName\", mail, password, phone, address, \"cityId\"  " +
-                            "FROM\"user\" where id = ?",
-                        new BeanPropertyRowMapper<>(Admin.class),
-                        id
+                    "select id, name, \"lastName\", mail " + 
+                        "from admin where id = ? ",
+                    new BeanPropertyRowMapper<>(Admin.class),
+                    id
                 )
         );
     }
 
     public List<Admin> getAllAdmins() {
         return jdbcTemplate.query(
-                "SELECT id, name, \"lastName\", mail, password, phone, address, \"cityId\"  " +
-                        "FROM\"user\"",
+                "select id, name, \"lastName\", mail " + 
+                        "from admin ",
                 new BeanPropertyRowMapper<>(Admin.class)
         );
     }
@@ -83,7 +99,7 @@ public class AdminRepository {
 
     public void deleteAdmin(Integer id) {
         jdbcTemplate.update(
-            "DELETE FROM category  WHERE id=?;", id
+            "DELETE FROM admin WHERE id=?;", id
         );
     }
 }

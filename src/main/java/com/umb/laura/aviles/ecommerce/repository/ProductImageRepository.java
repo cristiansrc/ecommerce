@@ -33,7 +33,7 @@ public class ProductImageRepository {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().intValue();
+        return Integer.valueOf(keyHolder.getKeys().get("id").toString());
     }
 
     public void deleteProductImage(Integer id) {
@@ -42,12 +42,19 @@ public class ProductImageRepository {
                 id
         );
     }
+    
+    public void deleteProductImageXProduct(Integer id) {
+        jdbcTemplate.update(
+                "DELETE FROM product_image WHERE \"productId\"=?;",
+                id
+        );
+    }
 
     public ProductImage getProductImage(Integer id) {
         return DataAccessUtils.singleResult(
             jdbcTemplate.query(
             "SELECT id, name, image, \"productId\" " +
-                    "        FROM roduct_image where id=?;",
+                    "        FROM product_image where id=?;",
                 new BeanPropertyRowMapper<>(ProductImage.class),
                 id
             )
@@ -57,7 +64,7 @@ public class ProductImageRepository {
     public List<ProductImage> getProductImageXProductId(Integer id) {
         return jdbcTemplate.query(
             "SELECT id, name, image, \"productId\" " +
-                    "        FROM roduct_image where \"productId\"=?;",
+                    "        FROM product_image where \"productId\"=?;",
             new BeanPropertyRowMapper<>(ProductImage.class),
             id
         );

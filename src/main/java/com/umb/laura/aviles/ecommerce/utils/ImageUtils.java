@@ -13,16 +13,18 @@ import java.util.UUID;
 public class ImageUtils {
 
     @Value("${config.image.location}")
-    private static String filePath;
+    private String filePath;
 
-    private static final String POINT = ".";
+    private static final String POINT = "\\.";
 
     public String saveBase64Image(String base64String, String originalName) throws IOException {
-        byte[] imageBytes = Base64.getDecoder().decode(base64String);
+        String[] parts = base64String.split(",");
+
+        byte[] imageBytes = Base64.getDecoder().decode(parts.length > 1 ? parts[1] : parts[0]);
         String[] arrayName = originalName.split(POINT);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(UUID.randomUUID().toString());
-        stringBuilder.append(POINT);
+        stringBuilder.append(".");
         stringBuilder.append(arrayName[1]);
 
         File file = new File(filePath + stringBuilder.toString());

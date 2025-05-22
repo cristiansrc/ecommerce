@@ -1,6 +1,7 @@
 package com.umb.laura.aviles.ecommerce.rest;
 
 import com.umb.laura.aviles.ecommerce.model.Admin;
+import com.umb.laura.aviles.ecommerce.model.AuthAdmin;
 import com.umb.laura.aviles.ecommerce.model.GeneralResponse;
 import com.umb.laura.aviles.ecommerce.model.LoginAdmin;
 import com.umb.laura.aviles.ecommerce.service.AdminService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping("/api/admin/")
-@CrossOrigin(origins = "http://localhost")
+@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 public class AdminRest extends Rest {
@@ -28,7 +29,7 @@ public class AdminRest extends Rest {
             id = adminService.addAdmin(admin);
         } catch (Exception e) {
             System.out.println("Ocurrió un error: " + e.getMessage());
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            httpStatus = HttpStatus.BAD_REQUEST;
             msg = "No se pudo guardar el admin";
         }
 
@@ -36,16 +37,16 @@ public class AdminRest extends Rest {
     }
 
     @PostMapping("login")
-    public ResponseEntity<GeneralResponse<Admin>> loginAdmin(@RequestBody LoginAdmin loginAdmin) {
+    public ResponseEntity<GeneralResponse<AuthAdmin>> loginAdmin(@RequestBody LoginAdmin loginAdmin) {
         HttpStatus httpStatus = HttpStatus.OK;
         String msg = "El admin se loggeo correctamente";
-        Admin respose = null;
+        AuthAdmin respose = null;
 
         try {
-            respose = adminService.loginAdmin(loginAdmin.getEmail(), loginAdmin.getPassword());
+            respose = adminService.loginAdmin(loginAdmin.getMail(), loginAdmin.getPassword());
         } catch (Exception e) {
             System.out.println("Ocurrió un error: " + e.getMessage());
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            httpStatus = HttpStatus.NOT_FOUND;
             msg = "No se pudo guardar el admin";
         }
 
@@ -62,7 +63,7 @@ public class AdminRest extends Rest {
             respose = adminService.getAdmin(id);
         } catch (Exception e) {
             System.out.println("Ocurrió un error: " + e.getMessage());
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            httpStatus = HttpStatus.BAD_REQUEST;
             msg = "No se pudo consultar el admin";
         }
 
@@ -79,7 +80,7 @@ public class AdminRest extends Rest {
             respose = adminService.getAllAdmins();
         } catch (Exception e) {
             System.out.println("Ocurrió un error: " + e.getMessage());
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            httpStatus = HttpStatus.BAD_REQUEST;
             msg = "No se pudieron consultar los admins";
         }
 
@@ -95,7 +96,7 @@ public class AdminRest extends Rest {
             adminService.updateAdmin(admin);
         } catch (Exception e) {
             System.out.println("Ocurrió un error: " + e.getMessage());
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            httpStatus = HttpStatus.BAD_REQUEST;
             msg = "El admin no se actualizo";
         }
 
@@ -111,11 +112,11 @@ public class AdminRest extends Rest {
             adminService.updateAdmin(admin);
         } catch (Exception e) {
             System.out.println("Ocurrió un error: " + e.getMessage());
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            httpStatus = HttpStatus.BAD_REQUEST;
             msg = "El admin no se elimino";
         }
 
-        return this.generalResponse("",httpStatus,msg);
+        return this.generalResponse("", httpStatus,msg);
     }
 
 

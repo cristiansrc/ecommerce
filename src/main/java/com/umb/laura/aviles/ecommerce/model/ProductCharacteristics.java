@@ -15,5 +15,4 @@ public class ProductCharacteristics {
     private Integer colorId;
     private Integer sizeId;
     private Integer productId;
-    private List<ProductCharacteristicsImage> productCharacteristicsImages;
 }

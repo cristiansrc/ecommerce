@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/product/")
-@CrossOrigin(origins = "http://localhost")
+@RequestMapping("")
+@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 public class ProductRest extends Rest {
     private ProductService productService;
 
-    @PostMapping("")
+    @PostMapping("/api/product/")
     public ResponseEntity<GeneralResponse<Integer>> addProduct (@RequestBody Product product) {
         Integer response = null;
         HttpStatus httpStatus = HttpStatus.OK;
@@ -33,7 +33,7 @@ public class ProductRest extends Rest {
         return this.generalResponse(response,httpStatus,msg);
     }
 
-    @PutMapping("")
+    @PutMapping("/api/product/")
     public ResponseEntity<GeneralResponse<String>> updateProduct (@RequestBody Product product) {
         HttpStatus httpStatus = HttpStatus.OK;
         String msg = "Se consulto corectamente";
@@ -49,7 +49,7 @@ public class ProductRest extends Rest {
         return this.generalResponse("",httpStatus,msg);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/api/product/{id}")
     public ResponseEntity<GeneralResponse<String>> deleteProduct(@PathVariable Integer id) {
         HttpStatus httpStatus = HttpStatus.OK;
         String msg = "Se consulto corectamente";
@@ -64,9 +64,42 @@ public class ProductRest extends Rest {
 
         return this.generalResponse("" ,httpStatus,msg);
     }
+    
+    @GetMapping("/api/product/simple/{id}")
+    public ResponseEntity<GeneralResponse<Product>> getProducts(@PathVariable Integer id) {
+        Product response = null;
+        HttpStatus httpStatus = HttpStatus.OK;
+        String msg = "Se consulto corectamente";
+        
+        try {
+            response = productService.getProductSimple(id);
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error: " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            msg = "Hubo un error en base de datos";
+        }
 
-    @GetMapping("{id}")
-    public ResponseEntity<GeneralResponse<ProductInfo>> getProduct(@PathVariable Integer id) {
+        return this.generalResponse(response,httpStatus,msg);
+    }
+    
+    @GetMapping("/api/product/")
+    public ResponseEntity<GeneralResponse<List<Product>>> getProducts() {
+        List<Product> response = null;
+        HttpStatus httpStatus = HttpStatus.OK;
+        String msg = "Se consulto corectamente";
+        
+        try {
+            response = productService.getProducts();
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error: " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            msg = "Hubo un error en base de datos";
+        }
+
+        return this.generalResponse(response,httpStatus,msg);
+    }
+
+    private ResponseEntity<GeneralResponse<ProductInfo>> getProduct(Integer id){
         ProductInfo response = null;
         HttpStatus httpStatus = HttpStatus.OK;
         String msg = "Se consulto corectamente";
@@ -82,7 +115,17 @@ public class ProductRest extends Rest {
         return this.generalResponse(response,httpStatus,msg);
     }
 
-    @PostMapping("dinamic/filter/")
+    @GetMapping("/api/admin/product/{id}")
+    public ResponseEntity<GeneralResponse<ProductInfo>> getProductAdmin(@PathVariable Integer id) {
+        return this.getProduct(id);
+    }
+
+    @GetMapping("/api/product/{id}")
+    public ResponseEntity<GeneralResponse<ProductInfo>> getProductShopping(@PathVariable Integer id) {
+        return this.getProduct(id);
+    }
+
+    @PostMapping("/api/product/dinamic/filter/")
     public ResponseEntity<GeneralResponse<List<ProductFill>>> addFilter(@RequestBody FiltersProductIn filtersProductIn) {
         List<ProductFill> response = null;
         HttpStatus httpStatus = HttpStatus.OK;
@@ -97,5 +140,40 @@ public class ProductRest extends Rest {
         }
 
         return this.generalResponse(response,httpStatus,msg);
+    }
+
+    @GetMapping("/api/product/shopping/{gender}")
+    public ResponseEntity<GeneralResponse<List<ProductShopping>>> getProductShopping(
+            @PathVariable String gender,
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice
+    ) {
+        List<ProductShopping> response = null;
+        HttpStatus httpStatus = HttpStatus.OK;
+        String msg = "Se consulto corectamente";
+
+        try {
+            response = productService.queryFilterShoppingConstruct(gender, categoryId, minPrice, maxPrice);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return this.generalResponse(response, httpStatus,msg);
+    }
+
+    @GetMapping("/api/product/shopping/id/{id}")
+    public ResponseEntity<GeneralResponse<ProductShopping>> getProductShoppingXProductId(@PathVariable Integer id) {
+        ProductShopping response = null;
+        HttpStatus httpStatus = HttpStatus.OK;
+        String msg = "Se consulto corectamente";
+
+        try {
+            response = productService.queryFilterShoppingConstructXIdProduct(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return this.generalResponse(response, httpStatus,msg);
     }
 }
