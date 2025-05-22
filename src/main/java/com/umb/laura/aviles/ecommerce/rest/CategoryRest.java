@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/category/")
-@CrossOrigin(origins = "http://localhost")
+@RequestMapping("")
+@CrossOrigin(origins = "http://localhost:3000/")
 @RestController
 @AllArgsConstructor
 public class CategoryRest extends Rest {
     private CategoryService categoryService;
 
-    @PostMapping("")
-    public ResponseEntity<GeneralResponse<Integer>> addCategory(@RequestBody Category category) {
-        Integer response = null;
+    @PostMapping("/api/category/")
+    public ResponseEntity<GeneralResponse<Long>> addCategory(@RequestBody Category category) {
+        Long response = null;
         HttpStatus httpStatus = HttpStatus.OK;
         String msg = "Se consulto corectamente";
 
@@ -34,7 +34,7 @@ public class CategoryRest extends Rest {
         return this.generalResponse(response,httpStatus,msg);
     }
 
-    @PutMapping("")
+    @PutMapping("/api/category/")
     public ResponseEntity<GeneralResponse<String>> updateCategory(@RequestBody Category category) {
         HttpStatus httpStatus = HttpStatus.OK;
         String msg = "Se consulto corectamente";
@@ -48,9 +48,8 @@ public class CategoryRest extends Rest {
 
         return this.generalResponse("",httpStatus,msg);
     }
-
-    @GetMapping("{id}")
-    public ResponseEntity<GeneralResponse<Category>> getCategoryXid(@PathVariable Integer id) {
+    
+    public ResponseEntity<GeneralResponse<Category>> getCategoryXid(Integer id) {
         Category response = null;
         HttpStatus httpStatus = HttpStatus.OK;
         String msg = "Se consulto corectamente";
@@ -63,8 +62,17 @@ public class CategoryRest extends Rest {
 
         return this.generalResponse(response,httpStatus,msg);
     }
+    
+    @GetMapping("/api/admin/category/{id}")
+    public ResponseEntity<GeneralResponse<Category>> getCategoryXidAdmin(@PathVariable Integer id) {
+        return getCategoryXid(id);
+    }
 
-    @GetMapping("")
+    @GetMapping("/api/category/{id}")
+    public ResponseEntity<GeneralResponse<Category>> getCategoryXidShopping(@PathVariable Integer id) {
+        return getCategoryXid(id);
+    }
+    
     public ResponseEntity<GeneralResponse<List<Category>>> getCategory() {
         List<Category> response = null;
         HttpStatus httpStatus = HttpStatus.OK;
@@ -79,7 +87,17 @@ public class CategoryRest extends Rest {
         return this.generalResponse(response,httpStatus,msg);
     }
 
-    @DeleteMapping("{id}")
+    @GetMapping("/api/category/")
+    public ResponseEntity<GeneralResponse<List<Category>>> getCategoryShopping() {
+        return getCategory();
+    }
+    
+    @GetMapping("/api/admin/category/")
+    public ResponseEntity<GeneralResponse<List<Category>>> getCategoryAdmin() {
+        return getCategory();
+    }
+
+    @DeleteMapping("/api/category/{id}")
     public ResponseEntity<GeneralResponse<String>> updateCategory(@PathVariable Integer id) {
         HttpStatus httpStatus = HttpStatus.OK;
         String msg = "Se consulto corectamente";

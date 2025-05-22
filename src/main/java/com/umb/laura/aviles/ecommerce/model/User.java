@@ -1,5 +1,8 @@
 package com.umb.laura.aviles.ecommerce.model;
 
+import java.util.Collection;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 

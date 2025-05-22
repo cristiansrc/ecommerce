@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginAdmin {
-    private String mail;
-    private String password;
+public class AuthUser extends User {
+    private String authorization;
 }

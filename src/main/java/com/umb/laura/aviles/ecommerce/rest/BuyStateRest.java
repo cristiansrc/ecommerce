@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RequestMapping("/api/buy/state/")
-@CrossOrigin(origins = "http://localhost")
+@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 public class BuyStateRest extends Rest {

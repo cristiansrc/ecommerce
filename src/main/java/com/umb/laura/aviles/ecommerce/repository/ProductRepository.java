@@ -23,29 +23,31 @@ public class ProductRepository {
 
        jdbcTemplate.update(connection -> {
            PreparedStatement ps = connection.prepareStatement(
-                   "INSERT INTO product(name, description, gender, \"categoryId\") " +
-                           "       VALUES (?, ?, ?, ?);",
+                   "INSERT INTO product(name, description, gender, price, \"categoryId\") " +
+                           "       VALUES (?, ?, ?, ?, ?);",
                    Statement.RETURN_GENERATED_KEYS);
 
            ps.setString(1, product.getName());
            ps.setString(2, product.getDescription());
            ps.setString(3, product.getGender());
-           ps.setInt(4, product.getCategoryId());
+           ps.setInt(4, product.getPrice());
+           ps.setInt(5, product.getCategoryId());
            return ps;
        }, keyHolder);
 
-       return keyHolder.getKey().intValue();
+       return Integer.valueOf(keyHolder.getKeys().get("id").toString());
    }
 
    public void updateProduct(Product product) {
        jdbcTemplate.update(
                "UPDATE product " +
-                       "       SET name=?, description=?, gender=?, \"categoryId\"=? " +
+                       "       SET name=?, description=?, gender=?, \"categoryId\"=?, price=? " +
                        "       WHERE id=?;",
                product.getName(),
                product.getDescription(),
                product.getGender(),
                product.getCategoryId(),
+               product.getPrice(),
                product.getId()
        );
    }
@@ -55,6 +57,22 @@ public class ProductRepository {
                "DELETE FROM product WHERE id=?;", id
        );
    }
+   
+   public List<Product> getProducts(){
+       return jdbcTemplate.query(
+               "SELECT id, name, description, gender, \"categoryId\", price FROM product;",
+               new BeanPropertyRowMapper<>(Product.class)
+       );
+   }
+   
+   public Product getProductSimple(Integer id){
+       return DataAccessUtils.singleResult(jdbcTemplate.query(
+               "SELECT id, name, description, gender, \"categoryId\", price FROM product where id=?;",
+               new BeanPropertyRowMapper<>(Product.class),
+               id
+       ));
+   }
+
 
    public ProductInfo getProduct(Integer id) {
        return DataAccessUtils.singleResult(
@@ -128,5 +146,38 @@ public class ProductRepository {
                new BeanPropertyRowMapper<>(ProductImage.class),
                productId
        );
+   }
+
+   public List<ProductShopping> getProductsShopping(String query, Object... params) {
+        return jdbcTemplate.query(
+                query,
+                new BeanPropertyRowMapper<>(ProductShopping.class),
+                params
+        );
+   }
+
+   public ProductShopping getProductShoppingXProduct(Integer id) {
+       return DataAccessUtils.singleResult(jdbcTemplate.query(
+               "SELECT  " +
+                       " product.id,  " +
+                       " product.name,  " +
+                       " product.description,  " +
+                       " product.gender,  " +
+                       " (CASE product.gender  " +
+                       "  WHEN 'm' THEN 'Mujer'  " +
+                       "  WHEN 'h' THEN 'Hombre'  " +
+                       " END) as \"genderName\",  " +
+                       " product.price,  " +
+                       " product.\"categoryId\",  " +
+                       " category.name as \"categoryName\"  " +
+                       "  " +
+                       " FROM product  " +
+                       "  INNER JOIN category  " +
+                       "   ON product.\"categoryId\" = category.id  " +
+                       "  " +
+                       " WHERE product.id = ? ",
+               new BeanPropertyRowMapper<>(ProductShopping.class),
+               id
+       ));
    }
 }

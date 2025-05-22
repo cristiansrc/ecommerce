@@ -3,7 +3,9 @@ package com.umb.laura.aviles.ecommerce.service;
 import com.umb.laura.aviles.ecommerce.model.ProductImage;
 import com.umb.laura.aviles.ecommerce.repository.ProductImageRepository;
 import com.umb.laura.aviles.ecommerce.utils.ImageUtils;
+
 import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -12,7 +14,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ProductImageService {
-
+    
     private ProductImageRepository productImageRepository;
     private ImageUtils imageUtils;
 

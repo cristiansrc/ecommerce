@@ -14,5 +14,5 @@ public class GeneralResponse<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private T data;
-    private ResponseGeneric responseInfo = new ResponseGeneric();
+    private ResponseGeneric error = new ResponseGeneric();
 }

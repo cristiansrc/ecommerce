@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api/pruduct/image/")
-@CrossOrigin(origins = "http://localhost")
+@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 public class ProductImageRest extends Rest {
@@ -73,7 +73,7 @@ public class ProductImageRest extends Rest {
     }
 
     @GetMapping("product/{productId}")
-    public ResponseEntity<GeneralResponse<List<ProductImage>>> getProductImageXProductId(Integer productId){
+    public ResponseEntity<GeneralResponse<List<ProductImage>>> getProductImageXProductId(@PathVariable Integer productId){
         List<ProductImage> response = null;
         HttpStatus httpStatus = HttpStatus.OK;
         String msg = "Se consulto corectamente";

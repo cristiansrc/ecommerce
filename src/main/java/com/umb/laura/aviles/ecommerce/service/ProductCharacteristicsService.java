@@ -36,9 +36,6 @@ public class ProductCharacteristicsService {
     public ProductCharacteristics getProductCharacteristics(Integer id) {
         ProductCharacteristics productCharacteristics = productCharacteristicsRepository.getProductCharacteristics(id);
 
-        productCharacteristics.setProductCharacteristicsImages(
-            productCharacteristicsImageRepository.getProductCharacteristicsImageByProductIdSimple(id));
-
         return productCharacteristics;
     }
 

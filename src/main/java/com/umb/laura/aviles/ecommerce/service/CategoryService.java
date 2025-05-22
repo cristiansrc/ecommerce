@@ -13,7 +13,7 @@ public class CategoryService {
 
     private CategoryRepository categoryRepository;
 
-    public Integer addCategory(Category category) {
+    public Long addCategory(Category category) {
         return categoryRepository.addCategory(category);
     }
 
