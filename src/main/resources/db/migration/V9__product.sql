@@ -4,7 +4,7 @@ CREATE TABLE product
     name character varying(100) COLLATE pg_catalog."default" NOT NULL,
     description text COLLATE pg_catalog."default" NOT NULL,
     gender character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    price double precision NOT NULL,
+    price bigint NOT NULL,
     "categoryId" bigint NOT NULL,
     CONSTRAINT product_pkey PRIMARY KEY (id),
     CONSTRAINT "product-category" FOREIGN KEY ("categoryId")

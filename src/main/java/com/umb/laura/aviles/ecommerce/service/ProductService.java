@@ -60,6 +60,26 @@ public class ProductService {
             " " +
             "WHERE 1 = 1 ";
 
+    private static final String QUERY_PRODUCT = "" +
+            "SELECT " +
+            "product.id, " +
+            "product.name, " +
+            "product.description, " +
+            "product.gender, " +
+            "(CASE product.gender " +
+            "   WHEN 'm' THEN 'Mujer' " +
+            "       WHEN 'h' THEN 'Hombre' " +
+            "   END) as \"genderName\", " +
+            "product.price, " +
+            "product.\"categoryId\", " +
+            "category.name as \"categoryName\" " +
+            " " +
+            "FROM product " +
+            "INNER JOIN category " +
+            "   ON product.\"categoryId\" = category.id " +
+            " " +
+            "WHERE 1 = 1 ";
+
     private static final String QUERY_FILTER_GENDER = " and product.gender = ? ";
     private static final String QUERY_FILTER_CATEGORY = " and product.\"categoryId\" in (%s) ";
     private static final String QUERY_FILTER_PRICE = " and (product_characteristics.price between ? and ?) ";
@@ -93,6 +113,10 @@ public class ProductService {
         return productRepository.getProductSimple(id);
     }
 
+    public List<Product> getAllProducts() {
+        return productRepository.getProductSimple();
+    }
+
     public ProductInfo getProduct(Integer productId) {
 
         List<ProductColor> productColorsOld = productRepository.getProductColorsProduct(productId);
@@ -107,8 +131,6 @@ public class ProductService {
 
         ProductInfo productInfo = productRepository.getProduct(productId);
         productInfo.setProductColors(productColors);
-        productInfo.setProductSizes(productRepository.getProductSizesXProduct(productId));
-        productInfo.setProductImages(productRepository.getProductImagesXProduct(productId));
 
         return productInfo;
     }

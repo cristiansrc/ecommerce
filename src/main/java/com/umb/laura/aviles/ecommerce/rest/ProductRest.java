@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("")
+@RequestMapping("/api/product/")
 @CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 public class ProductRest extends Rest {
     private ProductService productService;
 
-    @PostMapping("/api/product/")
+
+    @PostMapping("")
     public ResponseEntity<GeneralResponse<Integer>> addProduct (@RequestBody Product product) {
         Integer response = null;
         HttpStatus httpStatus = HttpStatus.OK;
@@ -115,17 +116,24 @@ public class ProductRest extends Rest {
         return this.generalResponse(response,httpStatus,msg);
     }
 
-    @GetMapping("/api/admin/product/{id}")
-    public ResponseEntity<GeneralResponse<ProductInfo>> getProductAdmin(@PathVariable Integer id) {
-        return this.getProduct(id);
+    @GetMapping("")
+    public ResponseEntity<GeneralResponse<List<Product>>> getProductSimple() {
+        List<Product> response = null;
+        HttpStatus httpStatus = HttpStatus.OK;
+        String msg = "Se consulto corectamente";
+
+        try {
+            response = productService.getAllProducts();
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error: " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            msg = "Hubo un error en base de datos";
+        }
+
+        return this.generalResponse(response,httpStatus,msg);
     }
 
-    @GetMapping("/api/product/{id}")
-    public ResponseEntity<GeneralResponse<ProductInfo>> getProductShopping(@PathVariable Integer id) {
-        return this.getProduct(id);
-    }
-
-    @PostMapping("/api/product/dinamic/filter/")
+    @PostMapping("dinamic/filter/")
     public ResponseEntity<GeneralResponse<List<ProductFill>>> addFilter(@RequestBody FiltersProductIn filtersProductIn) {
         List<ProductFill> response = null;
         HttpStatus httpStatus = HttpStatus.OK;
@@ -142,7 +150,7 @@ public class ProductRest extends Rest {
         return this.generalResponse(response,httpStatus,msg);
     }
 
-    @GetMapping("/api/product/shopping/{gender}")
+    @GetMapping("/shopping/{gender}")
     public ResponseEntity<GeneralResponse<List<ProductShopping>>> getProductShopping(
             @PathVariable String gender,
             @RequestParam(required = false) Integer categoryId,
@@ -162,7 +170,7 @@ public class ProductRest extends Rest {
         return this.generalResponse(response, httpStatus,msg);
     }
 
-    @GetMapping("/api/product/shopping/id/{id}")
+    @GetMapping("/shopping/id/{id}")
     public ResponseEntity<GeneralResponse<ProductShopping>> getProductShoppingXProductId(@PathVariable Integer id) {
         ProductShopping response = null;
         HttpStatus httpStatus = HttpStatus.OK;

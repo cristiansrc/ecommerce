@@ -33,8 +33,8 @@ public class CategoryRepository {
             ps.setString(2, category.getDescription());
             return ps;
         }, keyHolder);
-       
-        return Long.valueOf(keyHolder.getKeys().get("id").toString());
+
+        return Integer.valueOf(keyHolder.getKeys().get("id").toString());
     }
 
     public void updateCategory(Category category) {

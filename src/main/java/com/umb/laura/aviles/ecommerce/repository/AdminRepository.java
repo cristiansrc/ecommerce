@@ -43,9 +43,10 @@ public class AdminRepository {
     public AuthAdmin loginAdmin(String mail, String password) {
         return DataAccessUtils.singleResult(
                 jdbcTemplate.query(
-                        "select id, name, \"lastName\", mail " +
-                        " from admin where mail = ? and password = ? ",
-                        new BeanPropertyRowMapper<>(AuthAdmin.class),
+                        "SELECT id, name, \"lastName\", mail, password, phone, address  " +
+
+                                " FROM \"user\" where mail = ? and password = ?",
+                        new BeanPropertyRowMapper<>(Admin.class),
                         mail,
                         password
                 )
@@ -68,18 +69,18 @@ public class AdminRepository {
     public Admin getAdmin(Integer id) {
         return DataAccessUtils.singleResult(
                 jdbcTemplate.query(
-                    "select id, name, \"lastName\", mail " + 
-                        "from admin where id = ? ",
-                    new BeanPropertyRowMapper<>(Admin.class),
-                    id
+                    "SELECT id, name, \"lastName\", mail, password, phone, address " +
+                            "FROM\"user\" where id = ?",
+                        new BeanPropertyRowMapper<>(Admin.class),
+                        id
                 )
         );
     }
 
     public List<Admin> getAllAdmins() {
         return jdbcTemplate.query(
-                "select id, name, \"lastName\", mail " + 
-                        "from admin ",
+                "SELECT id, name, \"lastName\", mail, password, phone, address  " +
+                        "FROM\"user\"",
                 new BeanPropertyRowMapper<>(Admin.class)
         );
     }

@@ -7,10 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProductInfo {
-    private Integer id;
-    private String name;
-    private String description;
+public class ProductInfo extends Product {
     private String category;
     private List<ProductColor> productColors;
     private List<ProductSize> productSizes;

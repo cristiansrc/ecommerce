@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("")
-@CrossOrigin(origins = "http://localhost:3000/")
+@RequestMapping("/api/category/")
+@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 public class CategoryRest extends Rest {

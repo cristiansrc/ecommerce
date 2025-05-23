@@ -20,7 +20,7 @@ public class UserRepository {
     public void registerUser(User user) {
         jdbcTemplate.update(
                 "INSERT INTO \"user\"( " +
-                        "                name, \"lastName\", mail, password, phone, address, \"cityId\") " +
+                        "                name, \"lastName\", mail, password, phone, address) " +
                         "        VALUES (?, ?, ?, ?, ?, ?, ?);",
                 user.getName(),
                 user.getLastName(),
@@ -35,7 +35,7 @@ public class UserRepository {
     public User loginUser(LoginUser loginUser) {
         return DataAccessUtils.singleResult(
             jdbcTemplate.query(
-                "SELECT id, name, \"lastName\", mail, password, phone, address, \"cityId\" " +
+                "SELECT id, name, \"lastName\", mail, password, phone, address " +
                     "        FROM \"user\" where mail=? and password=?;",
                     new BeanPropertyRowMapper<>(User.class), loginUser.getEmail(), loginUser.getPassword()
             )

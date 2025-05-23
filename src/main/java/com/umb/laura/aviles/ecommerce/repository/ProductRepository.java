@@ -23,15 +23,15 @@ public class ProductRepository {
 
        jdbcTemplate.update(connection -> {
            PreparedStatement ps = connection.prepareStatement(
-                   "INSERT INTO product(name, description, gender, price, \"categoryId\") " +
+                   "INSERT INTO product(name, description, gender, \"categoryId\", price) " +
                            "       VALUES (?, ?, ?, ?, ?);",
                    Statement.RETURN_GENERATED_KEYS);
 
            ps.setString(1, product.getName());
            ps.setString(2, product.getDescription());
            ps.setString(3, product.getGender());
-           ps.setInt(4, product.getPrice());
-           ps.setInt(5, product.getCategoryId());
+           ps.setInt(4, product.getCategoryId());
+           ps.setInt(5, product.getPrice());
            return ps;
        }, keyHolder);
 
@@ -81,16 +81,32 @@ public class ProductRepository {
                                " product.id,  " +
                                " product.name,  " +
                                " product.description, " +
-                               " category.name as \"category\" " +
+                               " product.price, " +
+                               " product.gender, " +
+                               " product.price, " +
+                               " product.\"categoryId\" " +
                                "from product  " +
                                " inner join category " +
                                "  on category.id = product.\"categoryId\" " +
-                               "where product.id=1",
+                               "where product.id=?",
                        new BeanPropertyRowMapper<>(ProductInfo.class),
                        id
                )
        );
    }
+
+    public List<Product> getProductSimple() {
+        return
+            jdbcTemplate.query(
+                    "select  " +
+                            " product.id,  " +
+                            " product.name,  " +
+                            " product.description " +
+                            "from product  ",
+                    new BeanPropertyRowMapper<>(Product.class)
+            )
+        ;
+    }
 
    public List<ProductFill> getProductsDinamicQuery(String query, Object... params) {
        return jdbcTemplate.query(
